@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Test Anterin</string>
+    <string name="go_to_maps_button">Buka Peta</string>
+    <string name="set_location_button">Set lokasi</string>
+    <string name="save_location_button">Simpan</string>
+    <string name="choose_location">Pilih lokasi</string>
+    <string name="form_edit_address">Form Edit Alamat</string>
+    <string name="name">Nama</string>
+    <string name="address">Alamat</string>
+    <string name="description">Deskripsi</string>
+    <string name="coordinate">Koordinat</string>
+    <string name="add_photo">Tambahkan foto</string>
+    <string name="save_address">Simpan alamat</string>
+    <string name="edit_address">Ubah alamat</string>
+    <string name="success_add_address">Sukses menambakan alamat</string>
+    <string name="fail_add_address">Gagal menambakan alamat!</string>
+    <string name="success_update_address">Sukses merubah alamat!</string>
+    <string name="fail_update_address">Gagal merubah alamat!</string>
+    <string name="edit_address_title">Edit alamat</string>
+    <string name="list_address_title">List alamat</string>
+
+    <string-array name="locationMethodValues">
+        <item name="locationMethodGps">GPS</item>
+        <item name="locationMethodNetwork">NETWORK</item>
+        <item name="locationMethodGpsNetwork">GPS_NETWORK</item>
+        <item name="locationMethodGpsNetworkIndoor">GPS_NETWORK_INDOOR</item>
+        <item name="locationMethodIndoor">INDOOR</item>
+    </string-array>
+</resources>
