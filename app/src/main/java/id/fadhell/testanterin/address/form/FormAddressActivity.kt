@@ -7,7 +7,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,11 +16,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import com.yalantis.ucrop.UCrop
+import id.fadhell.testanterin.BuildConfig
 import id.fadhell.testanterin.R
+import id.fadhell.testanterin.address.list.ListAddressActivity
 import id.fadhell.testanterin.base.BaseActivity
-import  id.fadhell.testanterin.database.AddressDbManager
+import id.fadhell.testanterin.database.AddressDbManager
+import id.fadhell.testanterin.maps.MapsActivity
 import id.fadhell.testanterin.utils.AddressConstant.ADDRESS
 import id.fadhell.testanterin.utils.AddressConstant.COORDINATE
 import id.fadhell.testanterin.utils.AddressConstant.DATA_ADDRESS
@@ -29,14 +30,12 @@ import id.fadhell.testanterin.utils.AddressConstant.DATA_COORDINATE
 import id.fadhell.testanterin.utils.AddressConstant.DATA_DESCRIPTION
 import id.fadhell.testanterin.utils.AddressConstant.DATA_ID
 import id.fadhell.testanterin.utils.AddressConstant.DATA_NAME
+import id.fadhell.testanterin.utils.AddressConstant.DATA_PHOTO
 import id.fadhell.testanterin.utils.AddressConstant.DESCRIPTION
 import id.fadhell.testanterin.utils.AddressConstant.NAME
-import id.fadhell.testanterin.utils.PhotoProvider
-import id.fadhell.testanterin.utils.ImageUtils
-import id.fadhell.testanterin.BuildConfig
-import id.fadhell.testanterin.address.list.ListAddressActivity
-import id.fadhell.testanterin.utils.AddressConstant.DATA_PHOTO
 import id.fadhell.testanterin.utils.AddressConstant.PHOTO
+import id.fadhell.testanterin.utils.ImageUtils
+import id.fadhell.testanterin.utils.PhotoProvider
 import id.fadhell.testanterin.utils.loadImage
 import kotlinx.android.synthetic.main.form_address_activity.*
 import kotlinx.android.synthetic.main.secondary_toolbar.*
@@ -49,13 +48,13 @@ class FormAddressActivity : BaseActivity() {
         const val INTERVAL_TIME = 1000L
         const val REQ_CODE_CAMERA = 100
         const val REQ_CODE_GALLERY = 200
-        const val MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE : Int = 123
+        const val MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: Int = 123
     }
+
     private var userChoosenTask: Int? = null
     lateinit var cameraTempUri: Uri
     private var imageBase64: String? = ""
     private var imageFile: File? = null
-    private var uriString: String? = null
     var id = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,7 +100,7 @@ class FormAddressActivity : BaseActivity() {
                 editCoordinate.setText(bundle.getString(DATA_COORDINATE))
                 editDescription.setText(bundle.getString(DATA_DESCRIPTION))
                 val uri = bundle.getString(DATA_PHOTO)
-                imagePhoto.setImageURI(Uri.parse(uri))
+                imagePhoto.loadImage(this, uri, false)
             }
         }
     }
@@ -114,7 +113,7 @@ class FormAddressActivity : BaseActivity() {
         values.put(ADDRESS, editAddress.text.toString())
         values.put(DESCRIPTION, editDescription.text.toString())
         values.put(COORDINATE, editCoordinate.text.toString())
-        values.put(PHOTO, uriString)
+        values.put(PHOTO, imageFile.toString())
 
         if (id == 0) {
             val id = dbManager.insert(values)
@@ -152,8 +151,10 @@ class FormAddressActivity : BaseActivity() {
         builder.show()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>
-                                            , grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>
+        , grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
@@ -176,11 +177,12 @@ class FormAddressActivity : BaseActivity() {
 
                     val uri = PhotoProvider().getPhotoUri(data!!)
                     Thread(Runnable {
-                        imageBase64 = ImageUtils.encodeImage(ImageUtils.convertUriToBitmap
-                            (uri, this))
+                        imageBase64 = ImageUtils.encodeImage(
+                            ImageUtils.convertUriToBitmap
+                                (uri, this)
+                        )
                         contentResolver.notifyChange(uri, null)
                     }).start()
-                    uriString = uri.toString()
                     imageFile = File(uri.path)
                     imagePhoto.setImageURI(uri)
                     return
@@ -212,12 +214,19 @@ class FormAddressActivity : BaseActivity() {
                 if (!file.exists()) {
                     file.mkdir()
                 }
-                val imageFile = File(file.path, Calendar.getInstance()
-                    .timeInMillis.toString() + "" + ".jpg")
-                FileProvider.getUriForFile(applicationContext,
-                    BuildConfig.APPLICATION_ID + "" + ".provider", imageFile)
+                val imageFile = File(
+                    file.path, Calendar.getInstance()
+                        .timeInMillis.toString() + "" + ".jpg"
+                )
+                FileProvider.getUriForFile(
+                    applicationContext,
+                    BuildConfig.APPLICATION_ID + "" + ".provider", imageFile
+                )
             } else {
-                applicationContext?.contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)!!
+                applicationContext?.contentResolver?.insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    values
+                )!!
             }
 
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -236,8 +245,10 @@ class FormAddressActivity : BaseActivity() {
             intent.type = "image/*"
             intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
             intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(Intent.createChooser(intent, "Pilih Photo")
-                , REQ_CODE_GALLERY)
+            startActivityForResult(
+                Intent.createChooser(intent, "Pilih Photo")
+                , REQ_CODE_GALLERY
+            )
         }
     }
 
@@ -255,42 +266,64 @@ class FormAddressActivity : BaseActivity() {
         }
     }
 
-    private fun checkPermission(context: Context) : Boolean {
+    private fun checkPermission(context: Context): Boolean {
         val permissions = arrayOf(
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA)
+            Manifest.permission.CAMERA
+        )
 
-        var permissionsGranted  = false
-        val currentApiVersion : Int = Build.VERSION.SDK_INT
+        var permissionsGranted = false
+        val currentApiVersion: Int = Build.VERSION.SDK_INT
 
-        if(currentApiVersion >= Build.VERSION_CODES.M){
-            for(permission in permissions){
-                if(ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED){
-                    if(ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, permission)){
-                        ActivityCompat.requestPermissions(context,
+        if (currentApiVersion >= Build.VERSION_CODES.M) {
+            for (permission in permissions) {
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        permission
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(
+                            context as Activity,
+                            permission
+                        )
+                    ) {
+                        ActivityCompat.requestPermissions(
+                            context,
                             arrayOf(
                                 Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.CAMERA),
-                            MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE)
-                    }else{
-                        ActivityCompat.requestPermissions(context,
+                                Manifest.permission.CAMERA
+                            ),
+                            MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
+                        )
+                    } else {
+                        ActivityCompat.requestPermissions(
+                            context,
                             arrayOf(
                                 Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.CAMERA),
-                            MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE)
+                                Manifest.permission.CAMERA
+                            ),
+                            MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
+                        )
                     }
                     permissionsGranted = false
                     break
-                }else{
+                } else {
                     permissionsGranted = true
                 }
             }
             return permissionsGranted
-        }else{
+        } else {
             return true
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MapsActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

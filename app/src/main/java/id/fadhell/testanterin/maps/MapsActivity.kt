@@ -245,11 +245,13 @@ class MapsActivity : BaseActivity(), OnPositionChangedListener, Map.OnTransformL
             val intent = Intent(this, FormAddressActivity::class.java)
             intent.putExtra(DATA_COORDINATE, locationCoordinate)
             startActivity(intent)
+            finish()
         }
     }
 
     private fun goToListPage() {
         val intent = Intent(this, ListAddressActivity::class.java)
         startActivity(intent)
+        finish()
     }
 }
