@@ -22,7 +22,6 @@ import id.fadhell.testanterin.R
 import id.fadhell.testanterin.address.list.ListAddressActivity
 import id.fadhell.testanterin.base.BaseActivity
 import id.fadhell.testanterin.database.AddressDbManager
-import id.fadhell.testanterin.maps.MapsActivity
 import id.fadhell.testanterin.utils.AddressConstant.ADDRESS
 import id.fadhell.testanterin.utils.AddressConstant.COORDINATE
 import id.fadhell.testanterin.utils.AddressConstant.DATA_ADDRESS
@@ -55,6 +54,7 @@ class FormAddressActivity : BaseActivity() {
     lateinit var cameraTempUri: Uri
     private var imageBase64: String? = ""
     private var imageFile: File? = null
+    private var coordinate: String? = null
     var id = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +83,10 @@ class FormAddressActivity : BaseActivity() {
         buttonImage.setOnClickListener {
             openCamera()
         }
+
+        textInputCoordinate.setOnClickListener {
+            gotoMapsPage()
+        }
     }
 
     private fun validateUser() {
@@ -97,7 +101,8 @@ class FormAddressActivity : BaseActivity() {
             if (id != 0) {
                 editName.setText(bundle.getString(DATA_NAME))
                 editAddress.setText(bundle.getString(DATA_ADDRESS))
-                editCoordinate.setText(bundle.getString(DATA_COORDINATE))
+                coordinate = bundle.getString(COORDINATE)
+                editCoordinate.setText(coordinate)
                 editDescription.setText(bundle.getString(DATA_DESCRIPTION))
                 val uri = bundle.getString(DATA_PHOTO)
                 imagePhoto.loadImage(this, uri, false)
@@ -113,7 +118,11 @@ class FormAddressActivity : BaseActivity() {
 
         if (name.isEmpty() || address.isEmpty() || description.isEmpty() || coordinate.isEmpty() || imageFile == null) {
 
-            Toast.makeText(applicationContext, getString(R.string.show_failed_save), Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                applicationContext,
+                getString(R.string.show_failed_save),
+                Toast.LENGTH_LONG
+            ).show()
 
         } else {
 
@@ -334,8 +343,12 @@ class FormAddressActivity : BaseActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val intent = Intent(this, MapsActivity::class.java)
-        startActivity(intent)
-        finish()
+    }
+
+    private fun gotoMapsPage() {
+//        val intent = Intent(this, MapsActivity::class.java)
+//        intent.putExtra("coordinate", coordinate)
+//        startActivity(intent)
+//        finish()
     }
 }

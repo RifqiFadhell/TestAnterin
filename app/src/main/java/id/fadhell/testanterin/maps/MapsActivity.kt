@@ -39,6 +39,7 @@ class MapsActivity : BaseActivity(), OnPositionChangedListener, Map.OnTransformL
     private var paused: Boolean = false
     private var transforming: Boolean = false
     private var locationCoordinate: String? = null
+    private var coordinate: String? = null
 
     //Permissions
     private val REQUEST_CODE_ASK_PERMISSIONS = 1
@@ -146,8 +147,11 @@ class MapsActivity : BaseActivity(), OnPositionChangedListener, Map.OnTransformL
                 // retrieve a reference of the map from the map fragment
                 map = supportMapFragment.map
 
+//                if (intent != null) {
+//                    coordinate = intent.getStringExtra("coordinate")
+//                    map?.setCenter(GeoCoordinate(), Map.Animation.NONE)
+//                }
                 map?.addTransformListener(this@MapsActivity)
-
                 positioningManager = getInstance()
                 positioningManager?.addListener(WeakReference<OnPositionChangedListener>(this@MapsActivity))
 
