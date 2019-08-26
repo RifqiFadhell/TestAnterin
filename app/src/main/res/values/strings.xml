@@ -18,6 +18,7 @@
     <string name="fail_update_address">Gagal merubah alamat!</string>
     <string name="edit_address_title">Edit alamat</string>
     <string name="list_address_title">List alamat</string>
+    <string name="show_failed_save">Isian tidak boleh di kosongkan</string>
 
     <string-array name="locationMethodValues">
         <item name="locationMethodGps">GPS</item>

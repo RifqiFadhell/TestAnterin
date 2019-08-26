@@ -106,33 +106,45 @@ class FormAddressActivity : BaseActivity() {
     }
 
     private fun saveData() {
-        val dbManager = AddressDbManager(this)
+        val name = editName.text.toString()
+        val address = editAddress.text.toString()
+        val description = editDescription.text.toString()
+        val coordinate = editCoordinate.text.toString()
 
-        val values = ContentValues()
-        values.put(NAME, editName.text.toString())
-        values.put(ADDRESS, editAddress.text.toString())
-        values.put(DESCRIPTION, editDescription.text.toString())
-        values.put(COORDINATE, editCoordinate.text.toString())
-        values.put(PHOTO, imageFile.toString())
+        if (name.isEmpty() || address.isEmpty() || description.isEmpty() || coordinate.isEmpty() || imageFile == null) {
 
-        if (id == 0) {
-            val id = dbManager.insert(values)
+            Toast.makeText(applicationContext, getString(R.string.show_failed_save), Toast.LENGTH_LONG).show()
 
-            if (id > 0) {
-                Toast.makeText(this, R.string.success_add_address, Toast.LENGTH_LONG).show()
-                goToListPage()
-            } else {
-                Toast.makeText(this, R.string.fail_add_address, Toast.LENGTH_LONG).show()
-            }
         } else {
-            val selectionArs = arrayOf(id.toString())
-            val id = dbManager.update(values, "Id=?", selectionArs)
 
-            if (id > 0) {
-                Toast.makeText(this, R.string.success_update_address, Toast.LENGTH_LONG).show()
-                goToListPage()
+            val dbManager = AddressDbManager(this)
+
+            val values = ContentValues()
+            values.put(NAME, name)
+            values.put(ADDRESS, address)
+            values.put(DESCRIPTION, description)
+            values.put(COORDINATE, coordinate)
+            values.put(PHOTO, imageFile.toString())
+
+            if (id == 0) {
+                val id = dbManager.insert(values)
+
+                if (id > 0) {
+                    Toast.makeText(this, R.string.success_add_address, Toast.LENGTH_LONG).show()
+                    goToListPage()
+                } else {
+                    Toast.makeText(this, R.string.fail_add_address, Toast.LENGTH_LONG).show()
+                }
             } else {
-                Toast.makeText(this, R.string.fail_update_address, Toast.LENGTH_LONG).show()
+                val selectionArs = arrayOf(id.toString())
+                val id = dbManager.update(values, "Id=?", selectionArs)
+
+                if (id > 0) {
+                    Toast.makeText(this, R.string.success_update_address, Toast.LENGTH_LONG).show()
+                    goToListPage()
+                } else {
+                    Toast.makeText(this, R.string.fail_update_address, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
