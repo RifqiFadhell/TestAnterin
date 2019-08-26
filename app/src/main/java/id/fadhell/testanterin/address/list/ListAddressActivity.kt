@@ -15,6 +15,7 @@ import id.fadhell.testanterin.utils.AddressConstant.DATA_COORDINATE
 import id.fadhell.testanterin.utils.AddressConstant.DATA_DESCRIPTION
 import id.fadhell.testanterin.utils.AddressConstant.DATA_ID
 import id.fadhell.testanterin.utils.AddressConstant.DATA_NAME
+import id.fadhell.testanterin.utils.AddressConstant.PHOTO
 import id.fadhell.testanterin.utils.OnItemClickListener
 import kotlinx.android.synthetic.main.list_address_activity.*
 import kotlinx.android.synthetic.main.secondary_toolbar.*
@@ -71,8 +72,9 @@ class ListAddressActivity : BaseActivity() {
                 val address = cursor.getString(cursor.getColumnIndex("Address"))
                 val description = cursor.getString(cursor.getColumnIndex("Description"))
                 val coordinate = cursor.getString(cursor.getColumnIndex("Coordinate"))
+                val photo = cursor.getString(cursor.getColumnIndex("Photo"))
 
-                listAddress.add(DataAddress(id, nameAddress, address, description, coordinate))
+                listAddress.add(DataAddress(id, nameAddress, address, description, coordinate, photo))
 
             } while (cursor.moveToNext())
         }
@@ -87,6 +89,7 @@ class ListAddressActivity : BaseActivity() {
         intent.putExtra(DATA_ADDRESS, data.address)
         intent.putExtra(DATA_DESCRIPTION, data.description)
         intent.putExtra(DATA_COORDINATE, data.coordinate)
+        intent.putExtra(PHOTO, data.photo)
         startActivity(intent)
     }
 

@@ -25,24 +25,24 @@ class ListAddressAdapter(private val dataList: ArrayList<DataAddress>,  private 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = dataList[position]
 
-        holder.textTitle.text = data.nameAddress
-        holder.textAddress.text = data.address
+        holder.textTitle?.text = data.nameAddress
+        holder.textAddress?.text = data.address
 
-        holder.buttonEdit.setOnClickListener {
+        holder.buttonEdit?.setOnClickListener {
             listenerClick?.onItemClicked(position, holder.buttonEdit)
         }
-        holder.buttonDelete.setOnClickListener {
+        holder.buttonDelete?.setOnClickListener {
             listenerClick?.onItemClick(position, holder.buttonDelete)
         }
     }
 }
 
 class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-    val textTitle: TextView = view.findViewById(R.id.editName) as TextView
-    val textAddress: TextView = view.findViewById(R.id.textAddress) as TextView
+    val textTitle: TextView? = view.findViewById(R.id.textName) as TextView
+    val textAddress: TextView? = view.findViewById(R.id.textAddress) as TextView
 //    val textDescription: TextView = view.findViewById(R.id.editDescription) as TextView
 //    val textCoordinate: TextView = view.findViewById(R.id.editCoordinate) as TextView
-    val buttonEdit: ImageButton = view.findViewById(R.id.buttonEdit) as ImageButton
-    val buttonDelete: ImageButton = view.findViewById(R.id.buttonDelete) as ImageButton
+    val buttonEdit: ImageButton? = view.findViewById(R.id.buttonEdit) as ImageButton
+    val buttonDelete: ImageButton? = view.findViewById(R.id.buttonDelete) as ImageButton
 
 }

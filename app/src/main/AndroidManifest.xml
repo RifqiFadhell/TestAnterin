@@ -5,9 +5,13 @@
   package="id.fadhell.testanterin">
 
   <dist:module dist:instant="true"/>
+  <uses-feature
+    android:name="android.hardware.camera"
+    android:required="false"/>
 
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.CAMERA"/>
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -33,14 +37,34 @@
       android:name="com.here.android.maps.apptoken"
       android:value="@string/app_code"/>
 
-    <activity android:name=".MainActivity">
+    <activity android:name=".maps.MapsActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name=".maps.MapsActivity"/>
+
+    <activity
+      android:name="com.yalantis.ucrop.UCropActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+    <provider
+      android:authorities="${applicationId}.provider"
+      android:enabled="true"
+      android:exported="false"
+      android:grantUriPermissions="true"
+      android:name="androidx.core.content.FileProvider">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/provider_paths"/>
+    </provider>
+    <provider
+      android:authorities="${applicationId}.PhotoProvider"
+      android:exported="false"
+      android:grantUriPermissions="true"
+      android:name=".utils.PhotoProvider"/>
   </application>
 
 </manifest>

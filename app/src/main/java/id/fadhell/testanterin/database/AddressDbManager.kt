@@ -16,10 +16,14 @@ class AddressDbManager {
     private val columnAddress = "Address"
     private val columnDescription = "Description"
     private val columnCoordinate = "Coordinate"
+    private val columnPhoto = "Photo"
     private val dbVersion = 1
 
     private val CREATE_TABLE_SQL =
-        "CREATE TABLE IF NOT EXISTS " + dbTable + " (" + columnId + " " + "INTEGER PRIMARY KEY," + columnName + " TEXT, " + columnAddress + " TEXT, " + columnDescription + " TEXT, " + columnCoordinate + "TEXT);"
+        "CREATE TABLE IF NOT EXISTS " + dbTable + " (" + columnId + " " + "INTEGER PRIMARY KEY," + columnName + " TEXT, " + columnAddress + " TEXT, " + columnDescription + " TEXT, " + columnCoordinate + " TEXT, " + columnPhoto + " TEXT);"
+    private val CREATE =
+        "CREATE TABLE IF NOT EXISTS " + dbTable + " (" + columnId + " " + "INTEGER PRIMARY KEY," + columnName + " TEXT, " + columnAddress + " TEXT, " + columnDescription + " TEXT, " + columnCoordinate + " TEXT, " + columnPhoto + " TEXT);"
+
     private var database: SQLiteDatabase? = null
 
     constructor(context: Context) {

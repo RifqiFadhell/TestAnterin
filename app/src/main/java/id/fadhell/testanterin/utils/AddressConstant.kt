@@ -7,6 +7,7 @@ object AddressConstant {
     var DATA_ADDRESS = "data_address"
     var DATA_DESCRIPTION = "data_description"
     var DATA_COORDINATE = "data_coordinate"
+    var DATA_PHOTO = "data_photo"
 
     //DATABASE CONSTANT
     var NAME = "Name"
@@ -14,4 +15,5 @@ object AddressConstant {
     var ADDRESS = "Address"
     var DESCRIPTION = "Description"
     var COORDINATE = "Coordinate"
+    var PHOTO = "Photo"
 }
