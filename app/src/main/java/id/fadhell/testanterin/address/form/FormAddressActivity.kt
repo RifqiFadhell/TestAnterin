@@ -231,7 +231,7 @@ class FormAddressActivity : BaseActivity() {
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
 
             cameraTempUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val file = File(Environment.getExternalStorageDirectory(), "qasir")
+                val file = File(Environment.getExternalStorageDirectory(), "test")
                 if (!file.exists()) {
                     file.mkdir()
                 }
